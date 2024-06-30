@@ -48,7 +48,7 @@ export const createGame = async (req, res) => {
             return res.status(500).json({ error: 'Erreur lors de la création du jeu.' });
         }
         console.log("Email", email);
-        if (email) {
+        if (email.length && email[0]) {
             // Envoie de l'email d'invitation
             const mailOptions = await sendInvitationEmail(email, createdGame.id);
             transporter.sendMail(mailOptions, (error, info) => {
