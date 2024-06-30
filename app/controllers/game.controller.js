@@ -47,16 +47,18 @@ export const createGame = async (req, res) => {
         if (!createdGame) {
             return res.status(500).json({ error: 'Erreur lors de la création du jeu.' });
         }
-
-        // Envoie de l'email d'invitation
-        const mailOptions = await sendInvitationEmail(email, createdGame.id);
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error("Erreur lors de l'envoi de l'email:", error);
-                return res.status(500).json({ error: "Erreur lors de l'envoi de l'email" });
-            }
-            console.log('Email d\'invitation envoyé avec succès');
-        });
+        console.log("Email", email);
+        if (email) {
+            // Envoie de l'email d'invitation
+            const mailOptions = await sendInvitationEmail(email, createdGame.id);
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error("Erreur lors de l'envoi de l'email:", error);
+                    return res.status(500).json({ error: "Erreur lors de l'envoi de l'email" });
+                }
+                console.log('Email d\'invitation envoyé avec succès');
+            });
+        }
 
         return res.status(201).json(createdGame);
     } catch (error) {
@@ -89,7 +91,7 @@ export const joinGame = async (req, res) => {
         await gameDataMapper.joinGame(gameId, user.id, role);
 
         return res.status(200).json(game);
-        
+
     } catch (error) {
         if (error instanceof jwt.JsonWebTokenError) {
             return res.status(400).json({ error: 'Token d\'invitation invalide.' });

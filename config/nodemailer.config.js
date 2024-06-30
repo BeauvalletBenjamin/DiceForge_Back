@@ -15,8 +15,8 @@ export const transporter = nodemailer.createTransport({
     }
 });
 
-export const sendInvitationEmail = async (email, gameId, token) => {
-    const invitationLink = `http://localhost:5173/api/joingame?token=${token}`;
+export const sendInvitationEmail = (email, gameId,) => {
+    const invitationLink = `http://localhost:5173/api/game/${gameId}`;
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -29,7 +29,7 @@ export const sendInvitationEmail = async (email, gameId, token) => {
     return transporter.sendMail(mailOptions);
 };
 
-export const sendPasswordResetEmail = async (user, resetToken) => {
+export const sendPasswordResetEmail = (user, resetToken) => {
     const resetLink = `http://localhost:5173/api/reset-password?token=${resetToken}&id=${user.id}`;
     const mailOptions = {
         to: user.email,
